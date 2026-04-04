@@ -1,0 +1,28 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/Azure/azure-dev/main/schemas/v1.0/azure.yaml.json
+
+name: gemma4-on-aca
+metadata:
+  template: gemma4-on-aca@0.0.1-beta
+
+infra:
+  provider: bicep
+  path: infra
+  module: main
+  parameters:
+    gpuProfileType:
+      value: ${GPU_PROFILE_TYPE}
+    ollamaModel:
+      value: ${OLLAMA_MODEL}
+
+hooks:
+  preprovision:
+    windows:
+      shell: pwsh
+      run: hooks/select-gpu-model.ps1
+      interactive: true
+      continueOnError: false
+    posix:
+      shell: sh
+      run: hooks/select-gpu-model.sh
+      interactive: true
+      continueOnError: false

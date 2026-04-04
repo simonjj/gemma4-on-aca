@@ -1,0 +1,5 @@
+# Force LF line endings for shell scripts and configs
+*.sh text eol=lf
+*.template text eol=lf
+entrypoint.sh text eol=lf
+Dockerfile text eol=lf

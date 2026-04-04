@@ -1,0 +1,33 @@
+# Azure Developer CLI
+.azure/
+
+# Environment files
+.env
+.env.*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# Temp files
+tmp/
+
+# OpenCode local config (contains endpoint/credentials)
+opencode.json
+
+# Project instructions (internal)
+instructions.md
+
+# Compiled ARM template
+infra/main.json
+
+# Node
+package-lock.json
+node_modules/
