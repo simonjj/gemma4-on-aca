@@ -191,4 +191,4 @@ output AZURE_CONTAINER_APPS_ENVIRONMENT_ID string = containerAppsEnvironment.id
 output AZURE_CONTAINER_APPS_ENVIRONMENT_NAME string = containerAppsEnvironment.name
 output OLLAMA_APP_NAME string = ollamaApp.name
 output NGINX_AUTH_PROXY_APP_NAME string = nginxAuthProxyApp.name
-output OLLAMA_PROXY_ENDPOINT string = 'https://${nginxAuthProxyApp.properties.configuration.ingress.fqdn}'
+output OLLAMA_PROXY_ENDPOINT string = nginxAuthProxyApp.properties.configuration.ingress.fqdn
