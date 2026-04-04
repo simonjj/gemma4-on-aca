@@ -58,18 +58,6 @@ if (-not $env:OLLAMA_MODEL) {
     $env:OLLAMA_MODEL = $model
 }
 
-# ─── Proxy Password ───
-if (-not $env:PROXY_AUTH_PASSWORD) {
-    Write-Host ""
-    $pw = Read-Host "Enter password for the Ollama API proxy"
-    if ([string]::IsNullOrWhiteSpace($pw)) {
-        Write-Error "Password is required."
-        exit 1
-    }
-    azd env set PROXY_AUTH_PASSWORD $pw | Out-Null
-    $env:PROXY_AUTH_PASSWORD = $pw
-}
-
 Write-Host ""
 Write-Host "Configuration:"
 Write-Host "  GPU Profile : $env:GPU_PROFILE_TYPE"

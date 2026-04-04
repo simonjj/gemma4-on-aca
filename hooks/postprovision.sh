@@ -1,5 +1,5 @@
 #!/bin/bash
-# Post-provision hook: generates opencode.json for connecting OpenCode to the deployed Gemma 4 endpoint.
+# Post-provision hook: generates opencode.json and displays deployment info.
 
 ENDPOINT=$(azd env get-value OLLAMA_PROXY_ENDPOINT 2>/dev/null)
 MODEL=$(azd env get-value OLLAMA_MODEL 2>/dev/null)
@@ -10,18 +10,40 @@ if [ -z "$ENDPOINT" ] || [ -z "$MODEL" ]; then
     exit 0
 fi
 
-# Prompt for password if not in env
+# ─── Display Deployment Info ───
+echo ""
+echo "════════════════════════════════════════════════════════════════"
+echo "  Deployment complete!"
+echo "════════════════════════════════════════════════════════════════"
+echo ""
+echo "  Proxy endpoint: https://$ENDPOINT"
+echo "  Model:          $MODEL"
+echo ""
+echo "  Test with curl:"
+echo "    curl -u admin:<password> https://$ENDPOINT/v1/models"
+echo ""
+
+# ─── Generate opencode.json ───
 if [ -z "$PASSWORD" ]; then
-    printf "Enter your proxy auth password (for opencode.json): "
+    echo "  To generate opencode.json, re-enter your proxy password."
+    echo "  (This is the same password you entered earlier during provisioning.)"
+    echo ""
+    printf "  Proxy password: "
     read -r PASSWORD
 fi
 
 if [ -z "$PASSWORD" ]; then
-    echo "⚠ No password provided. Skipping opencode.json generation."
+    echo ""
+    echo "  ⚠ No password provided. Skipping opencode.json generation."
+    echo "  You can configure OpenCode manually — see README.md."
     exit 0
 fi
 
+# Store password for future runs
+azd env set PROXY_AUTH_PASSWORD "$PASSWORD" 2>/dev/null || true
+
 AUTH_BASIC=$(printf "admin:%s" "$PASSWORD" | base64)
+MODEL_SHORT="${MODEL##*:}"
 
 cat > opencode.json <<EOF
 {
@@ -38,7 +60,7 @@ cat > opencode.json <<EOF
       },
       "models": {
         "${MODEL}": {
-          "name": "Gemma 4 ${MODEL##*:}"
+          "name": "Gemma 4 ${MODEL_SHORT}"
         }
       }
     }
@@ -46,8 +68,11 @@ cat > opencode.json <<EOF
 }
 EOF
 
-echo "✅ Generated opencode.json → gemma4-aca/${MODEL}"
 echo ""
-echo "Usage:"
-echo "  opencode run -m \"gemma4-aca/${MODEL}\" \"your prompt here\""
-echo "  opencode   # then /models → pick Gemma 4"
+echo "  ✅ Generated opencode.json"
+echo ""
+echo "  Usage:"
+echo "    opencode run -m \"gemma4-aca/${MODEL}\" \"your prompt here\""
+echo "    opencode   # then /models → pick Gemma 4"
+echo ""
+echo "════════════════════════════════════════════════════════════════"

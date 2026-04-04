@@ -13,8 +13,6 @@ infra:
       value: ${GPU_PROFILE_TYPE}
     ollamaModel:
       value: ${OLLAMA_MODEL}
-    proxyAuthPassword:
-      value: ${PROXY_AUTH_PASSWORD}
 
 hooks:
   preprovision:

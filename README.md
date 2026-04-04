@@ -150,6 +150,17 @@ curl -u admin:<YOUR_PASSWORD> \
   }'
 ```
 
+## Pre-built Container Images
+
+This template uses pre-built images hosted on a public Azure Container Registry. No local Docker builds are needed.
+
+| Image | URL | Digest |
+|-------|-----|--------|
+| Ollama | `simon.azurecr.io/gemma4-on-aca/ollama:latest` | `sha256:887a9231e17e...` |
+| Nginx Auth Proxy | `simon.azurecr.io/gemma4-on-aca/nginx-auth-proxy:latest` | `sha256:4249385fd282...` |
+
+Both images support anonymous pull. To use your own registry, see [`scripts/README.md`](scripts/README.md).
+
 ## Architecture
 
 ```

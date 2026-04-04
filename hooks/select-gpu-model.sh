@@ -56,18 +56,6 @@ if [ -z "${OLLAMA_MODEL:-}" ]; then
   azd env set OLLAMA_MODEL "$OLLAMA_MODEL"
 fi
 
-# ─── Proxy Password ───
-if [ -z "${PROXY_AUTH_PASSWORD:-}" ]; then
-  echo ""
-  read -rp "Enter password for the Ollama API proxy: " proxy_pw
-  if [ -z "$proxy_pw" ]; then
-    echo "Error: Password is required."
-    exit 1
-  fi
-  azd env set PROXY_AUTH_PASSWORD "$proxy_pw"
-  PROXY_AUTH_PASSWORD="$proxy_pw"
-fi
-
 echo ""
 echo "Configuration:"
 echo "  GPU Profile : $GPU_PROFILE_TYPE"
