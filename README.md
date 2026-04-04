@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="misc/images/repo-logo.png" alt="Gemma 4 on Azure Container Apps with OpenCode" width="800">
+</p>
+
 # Gemma 4 on Azure Container Apps
 
 Deploy Google's [Gemma 4](https://ai.google.dev/gemma/docs/core) on Azure Container Apps with serverless GPU — in minutes.
