@@ -13,6 +13,11 @@ Deploy Google's [Gemma 4](https://ai.google.dev/gemma/docs/core) on Azure Contai
 - **OpenAI-compatible API** ready for [OpenCode](https://opencode.ai), `curl`, or any app
 - **One command deploy** via `azd up`
 
+<p align="center">
+  <img src="misc/images/architecture.png" alt="GPU and model selection prompt">
+</p>
+
+
 ## Prerequisites
 
 - [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli) installed and authenticated
@@ -28,11 +33,26 @@ azd up
 ```
 
 During setup you'll be prompted to:
+
 1. **Choose a GPU** — T4 (16 GB) or A100 (80 GB)
 2. **Pick a Gemma 4 model** — options depend on your GPU choice
 3. **Set a proxy password** — protects your Ollama API endpoint
 
-> **GPU region availability:** Serverless GPUs are available in select regions. When prompted for a location, choose from: `australiaeast`, `brazilsouth`, `canadacentral`, `eastus`, `italynorth`, `swedencentral`, `uksouth`, `westus`, `westus3`. [Full list →](https://learn.microsoft.com/en-us/azure/container-apps/workload-profiles-overview#gpu-workload-profiles)
+<p align="center">
+  <img src="misc/images/setup-prompt.png" alt="GPU and model selection prompt" width="700">
+</p>
+
+> **GPU region availability:** Serverless GPUs are available in select regions. When prompted for a location, choose from:  
+> - `australiaeast`
+> - `brazilsouth`
+>  - `canadacentral`
+>  - `eastus`
+>  - `italynorth`
+>  - `swedencentral` 
+>  - `uksouth`
+>  - `westus` 
+>  - `westus3`
+> [Full list →](https://learn.microsoft.com/en-us/azure/container-apps/workload-profiles-overview#gpu-workload-profiles)
 
 ## GPU + Model Options
 
@@ -66,6 +86,10 @@ Benchmarked on ACA serverless GPU in Sweden Central (Ollama v0.20, Q4_K_M quanti
 > 26b and 31b require A100 — they don't fit in T4's 16 GB VRAM.
 
 ## Verify Your Deployment
+
+<p align="center">
+  <img src="misc/images/final-success.png" alt="GPU and model selection prompt" width="1024">
+</p>
 
 After `azd up` completes, get your endpoint and test it:
 
