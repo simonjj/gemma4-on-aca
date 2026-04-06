@@ -3,6 +3,7 @@
 $endpoint = azd env get-value OLLAMA_PROXY_ENDPOINT 2>$null
 $model = azd env get-value OLLAMA_MODEL 2>$null
 $password = azd env get-value PROXY_AUTH_PASSWORD 2>$null
+if ($LASTEXITCODE -ne 0) { $password = $null }
 
 if (-not $endpoint -or -not $model) {
     Write-Host "⚠ Could not read deployment outputs. Skipping opencode.json generation."
@@ -24,8 +25,7 @@ Write-Host ""
 
 # ─── Generate opencode.json ───
 if (-not $password) {
-    Write-Host "  To generate opencode.json, re-enter your proxy password."
-    Write-Host "  (This is the same password you entered earlier during provisioning.)"
+    Write-Host "  To generate opencode.json, enter the proxy password you just set."
     Write-Host ""
     $password = Read-Host "  Proxy password"
 }
@@ -33,11 +33,12 @@ if (-not $password) {
 if (-not $password) {
     Write-Host ""
     Write-Host "  ⚠ No password provided. Skipping opencode.json generation."
-    Write-Host "  You can configure OpenCode manually — see README.md."
+    Write-Host "  Run: azd env set PROXY_AUTH_PASSWORD <your-password>"
+    Write-Host "  Then: azd hooks run postprovision"
     exit 0
 }
 
-# Store password for future runs
+# Save for future runs
 azd env set PROXY_AUTH_PASSWORD $password 2>$null | Out-Null
 
 $authBasic = [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes("admin:$password"))

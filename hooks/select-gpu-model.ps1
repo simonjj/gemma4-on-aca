@@ -55,6 +55,7 @@ if (-not $env:OLLAMA_MODEL) {
     }
 
     azd env set OLLAMA_MODEL $model | Out-Null
+    azd env config set infra.parameters.ollamaModel $model 2>$null
     $env:OLLAMA_MODEL = $model
 }
 

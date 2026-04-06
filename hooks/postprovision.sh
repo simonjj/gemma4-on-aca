@@ -3,7 +3,7 @@
 
 ENDPOINT=$(azd env get-value OLLAMA_PROXY_ENDPOINT 2>/dev/null)
 MODEL=$(azd env get-value OLLAMA_MODEL 2>/dev/null)
-PASSWORD=$(azd env get-value PROXY_AUTH_PASSWORD 2>/dev/null)
+PASSWORD=$(azd env get-value PROXY_AUTH_PASSWORD 2>/dev/null) || PASSWORD=""
 
 if [ -z "$ENDPOINT" ] || [ -z "$MODEL" ]; then
     echo "⚠ Could not read deployment outputs. Skipping opencode.json generation."
@@ -25,8 +25,7 @@ echo ""
 
 # ─── Generate opencode.json ───
 if [ -z "$PASSWORD" ]; then
-    echo "  To generate opencode.json, re-enter your proxy password."
-    echo "  (This is the same password you entered earlier during provisioning.)"
+    echo "  To generate opencode.json, enter the proxy password you just set."
     echo ""
     printf "  Proxy password: "
     read -r PASSWORD
@@ -35,11 +34,12 @@ fi
 if [ -z "$PASSWORD" ]; then
     echo ""
     echo "  ⚠ No password provided. Skipping opencode.json generation."
-    echo "  You can configure OpenCode manually — see README.md."
+    echo "  Run: azd env set PROXY_AUTH_PASSWORD <your-password>"
+    echo "  Then: azd hooks run postprovision"
     exit 0
 fi
 
-# Store password for future runs
+# Save for future runs
 azd env set PROXY_AUTH_PASSWORD "$PASSWORD" 2>/dev/null || true
 
 AUTH_BASIC=$(printf "admin:%s" "$PASSWORD" | base64)

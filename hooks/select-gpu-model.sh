@@ -54,6 +54,7 @@ if [ -z "${OLLAMA_MODEL:-}" ]; then
   fi
 
   azd env set OLLAMA_MODEL "$OLLAMA_MODEL"
+  azd env config set infra.parameters.ollamaModel "$OLLAMA_MODEL" 2>/dev/null || true
 fi
 
 echo ""
