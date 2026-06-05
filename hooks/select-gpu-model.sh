@@ -5,8 +5,8 @@ set -euo pipefail
 if [ -z "${GPU_PROFILE_TYPE:-}" ]; then
   echo ""
   echo "Select GPU profile:"
-  echo "  1) T4  (16 GB VRAM) — good for smaller Gemma4 models (e2b, e4b)"
-  echo "  2) A100 (80 GB VRAM) — supports all Gemma4 models including 26b and 31b"
+  echo "  1) T4  (16 GB VRAM) — good for smaller Gemma4 models (e2b, e4b, 12b)"
+  echo "  2) A100 (80 GB VRAM) — supports all Gemma4 models including 12b, 26b and 31b"
   echo ""
   read -rp "Enter choice [1/2] (default: 1): " gpu_choice
   gpu_choice="${gpu_choice:-1}"
@@ -28,27 +28,31 @@ if [ -z "${OLLAMA_MODEL:-}" ]; then
     echo "  1) gemma4:e4b   — 4B params, fast, multimodal (text+image+audio)"
     echo "  2) gemma4:26b   — 26B MoE, strong reasoning, 256K context"
     echo "  3) gemma4:31b   — 31B dense, highest quality, 256K context"
-    echo "  4) gemma4:e2b   — 2B params, ultra-fast, multimodal"
+    echo "  4) gemma4:12b   — 12B dense, near-26B reasoning at half the memory, native audio"
+    echo "  5) gemma4:e2b   — 2B params, ultra-fast, multimodal"
     echo ""
-    read -rp "Enter choice [1-4] (default: 2): " model_choice
+    read -rp "Enter choice [1-5] (default: 2): " model_choice
     model_choice="${model_choice:-2}"
 
     case "$model_choice" in
       1) OLLAMA_MODEL="gemma4:e4b" ;;
       3) OLLAMA_MODEL="gemma4:31b" ;;
-      4) OLLAMA_MODEL="gemma4:e2b" ;;
+      4) OLLAMA_MODEL="gemma4:12b" ;;
+      5) OLLAMA_MODEL="gemma4:e2b" ;;
       *) OLLAMA_MODEL="gemma4:26b" ;;
     esac
   else
     echo "Select Gemma 4 model for T4:"
     echo "  1) gemma4:e4b   — 4B params, good balance of speed and quality"
     echo "  2) gemma4:e2b   — 2B params, fastest, best for simple tasks"
+    echo "  3) gemma4:12b   — 12B dense, laptop-class reasoning (~½ throughput of e4b on T4)"
     echo ""
-    read -rp "Enter choice [1/2] (default: 1): " model_choice
+    read -rp "Enter choice [1-3] (default: 1): " model_choice
     model_choice="${model_choice:-1}"
 
     case "$model_choice" in
       2) OLLAMA_MODEL="gemma4:e2b" ;;
+      3) OLLAMA_MODEL="gemma4:12b" ;;
       *) OLLAMA_MODEL="gemma4:e4b" ;;
     esac
   fi

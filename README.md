@@ -58,8 +58,10 @@ During setup you'll be prompted to:
 
 | GPU | VRAM | Recommended Models | Best For |
 |-----|------|--------------------|----------|
-| **T4** | 16 GB | `gemma4:e4b` (default), `gemma4:e2b` | Cost-effective, lighter workloads |
-| **A100** | 80 GB | `gemma4:26b` (default), `gemma4:31b`, `gemma4:e4b`, `gemma4:e2b` | Maximum quality, heavy workloads |
+| **T4** | 16 GB | `gemma4:e4b` (default), `gemma4:e2b`, `gemma4:12b`† | Cost-effective, lighter workloads |
+| **A100** | 80 GB | `gemma4:26b` (default), `gemma4:31b`, `gemma4:12b`, `gemma4:e4b`, `gemma4:e2b` | Maximum quality, heavy workloads |
+
+† `gemma4:12b` requires Ollama ≥ 0.30.x. This template's pre-built image is pinned to v0.30.5 — if you fork and rebuild with an older base, the model pull will return HTTP 412.
 
 ### Model Details
 
@@ -67,23 +69,26 @@ During setup you'll be prompted to:
 |-------|--------|-------------|---------|------------|-----------|
 | `gemma4:e2b` | ~2B | Dense | 128K | Text, Image, Audio | ~7 GB |
 | `gemma4:e4b` | ~4B | Dense | 128K | Text, Image, Audio | ~10 GB |
+| `gemma4:12b` | 12B | Dense | 128K | Text, Image, Audio | ~8 GB |
 | `gemma4:26b` | 26B | MoE (4B active) | 256K | Text, Image | ~18 GB |
 | `gemma4:31b` | 31B | Dense | 256K | Text, Image | ~20 GB |
 
 ### Performance
 
-Benchmarked on ACA serverless GPU in Sweden Central (Ollama v0.20, Q4_K_M quantization, 32K context):
+Benchmarked on ACA serverless GPU in Sweden Central (Ollama v0.30.5, Q4_K_M quantization, 32K context):
 
 | Model | GPU | Tokens/sec | TTFT | Notes |
 |-------|-----|-----------|------|-------|
 | `gemma4:e2b` | T4 | ~81 | ~15ms | Fastest on T4 |
 | `gemma4:e4b` | T4 | ~51 | ~17ms | **Default T4 choice** |
+| `gemma4:12b` | T4 | ~25 | ~1000ms | Laptop-class reasoning; fits 16 GB but ~2× slower than e4b |
 | `gemma4:e2b` | A100 | ~184 | ~9ms | Ultra-fast |
 | `gemma4:e4b` | A100 | ~129 | ~12ms | Good for lighter workloads |
+| `gemma4:12b` | A100 | ~76 | ~670ms | Near-26B reasoning at half the memory; native audio |
 | `gemma4:26b` | A100 | ~113 | ~14ms | **Default A100 choice** — best quality/speed |
 | `gemma4:31b` | A100 | ~40 | ~30ms | Highest quality, slower |
 
-> 26b and 31b require A100 — they don't fit in T4's 16 GB VRAM.
+> 26b and 31b require A100 — they don't fit in T4's 16 GB VRAM. `gemma4:12b` was released June 2026 and is verified to load and run on ACA T4 (16 GB), but throughput is ~½ of e4b, so prefer A100 for production workloads.
 
 ## Verify Your Deployment
 
@@ -184,7 +189,7 @@ This template uses pre-built images hosted on a public Azure Container Registry.
 
 | Image | URL | Digest |
 |-------|-----|--------|
-| Ollama | `simon.azurecr.io/gemma4-on-aca/ollama:latest` | `sha256:887a9231e17e...` |
+| Ollama (v0.30.5) | `simon.azurecr.io/gemma4-on-aca/ollama:latest` | `sha256:9736a83fa19a...` |
 | Nginx Auth Proxy | `simon.azurecr.io/gemma4-on-aca/nginx-auth-proxy:latest` | `sha256:4249385fd282...` |
 
 Both images support anonymous pull. To use your own registry, see [`scripts/README.md`](scripts/README.md).

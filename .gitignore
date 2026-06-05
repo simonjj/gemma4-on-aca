@@ -21,9 +21,11 @@ tmp/
 
 # OpenCode local config (contains endpoint/credentials)
 opencode.json
+opencode-org.json
 
 # Project instructions (internal)
 instructions.md
+instructions-update.md
 
 # Compiled ARM template
 infra/main.json

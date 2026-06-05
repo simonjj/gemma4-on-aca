@@ -4,8 +4,8 @@ param()
 if (-not $env:GPU_PROFILE_TYPE) {
     Write-Host ""
     Write-Host "Select GPU profile:"
-    Write-Host "  1) T4  (16 GB VRAM) - good for smaller Gemma4 models (e2b, e4b)"
-    Write-Host "  2) A100 (80 GB VRAM) - supports all Gemma4 models including 26b and 31b"
+    Write-Host "  1) T4  (16 GB VRAM) - good for smaller Gemma4 models (e2b, e4b, 12b)"
+    Write-Host "  2) A100 (80 GB VRAM) - supports all Gemma4 models including 12b, 26b and 31b"
     Write-Host ""
     $gpuChoice = Read-Host "Enter choice [1/2] (default: 1)"
     if ([string]::IsNullOrWhiteSpace($gpuChoice)) { $gpuChoice = "1" }
@@ -28,15 +28,17 @@ if (-not $env:OLLAMA_MODEL) {
         Write-Host "  1) gemma4:e4b   - 4B params, fast, multimodal (text+image+audio)"
         Write-Host "  2) gemma4:26b   - 26B MoE, strong reasoning, 256K context"
         Write-Host "  3) gemma4:31b   - 31B dense, highest quality, 256K context"
-        Write-Host "  4) gemma4:e2b   - 2B params, ultra-fast, multimodal"
+        Write-Host "  4) gemma4:12b   - 12B dense, near-26B reasoning at half the memory, native audio"
+        Write-Host "  5) gemma4:e2b   - 2B params, ultra-fast, multimodal"
         Write-Host ""
-        $modelChoice = Read-Host "Enter choice [1-4] (default: 2)"
+        $modelChoice = Read-Host "Enter choice [1-5] (default: 2)"
         if ([string]::IsNullOrWhiteSpace($modelChoice)) { $modelChoice = "2" }
 
         switch ($modelChoice) {
             "1" { $model = "gemma4:e4b" }
             "3" { $model = "gemma4:31b" }
-            "4" { $model = "gemma4:e2b" }
+            "4" { $model = "gemma4:12b" }
+            "5" { $model = "gemma4:e2b" }
             default { $model = "gemma4:26b" }
         }
     }
@@ -44,12 +46,14 @@ if (-not $env:OLLAMA_MODEL) {
         Write-Host "Select Gemma 4 model for T4:"
         Write-Host "  1) gemma4:e4b   - 4B params, good balance of speed and quality"
         Write-Host "  2) gemma4:e2b   - 2B params, fastest, best for simple tasks"
+        Write-Host "  3) gemma4:12b   - 12B dense, laptop-class reasoning (~1/2 throughput of e4b on T4)"
         Write-Host ""
-        $modelChoice = Read-Host "Enter choice [1/2] (default: 1)"
+        $modelChoice = Read-Host "Enter choice [1-3] (default: 1)"
         if ([string]::IsNullOrWhiteSpace($modelChoice)) { $modelChoice = "1" }
 
         switch ($modelChoice) {
             "2" { $model = "gemma4:e2b" }
+            "3" { $model = "gemma4:12b" }
             default { $model = "gemma4:e4b" }
         }
     }
